@@ -1,0 +1,113 @@
+version: '3.3'
+
+services:
+  sogo:
+    image: rns/sogo:4.0.7
+    read_only: true
+    container_name: sogo
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "2m"
+        max-file: "10"
+    volumes:
+      - tmp_vol:/tmp
+      - sogoconf:/etc/sogo:ro
+    tmpfs:
+      - /run
+      - /var/lib/nginx
+      - /var/log/nginx
+      - /var/lib/sogo
+      - /var/spool/sogo
+    networks:
+      - sogo_default
+    ports:
+      - 127.0.0.1:20000:20000
+      - 127.0.0.1:8180:80
+    environment:
+      - "TZ=Europe/Berlin"
+    restart: always
+
+  sogo-backup:
+    image: rns/sogo:4.0.7
+    container_name: sogo-backup
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "2m"
+        max-file: "10"
+    volumes:
+      - sogoconf:/etc/sogo:ro
+      - backups:/home/sogo/backups
+      - ./scripts/task-sogo-backup.sh:/task-sogo-backup.sh:ro
+      - ./scripts/sogo-backup.sh:/sogo-backup.sh:ro
+    networks:
+      - sogo_default
+    environment:
+      - "TZ=Europe/Berlin"
+    command: /task-sogo-backup.sh
+    depends_on:
+      - sogo
+    restart: unless-stopped
+      
+  sogo-cron:
+    image: rns/sogo:4.0.7
+    container_name: sogo-cron
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "2m"
+        max-file: "10"
+    volumes:
+      - sogoconf:/etc/sogo:ro
+      - ./scripts/task-sogo-cron.sh:/task-sogo-cron.sh:ro
+    networks:
+      - sogo_default
+    environment:
+      - "TZ=Europe/Berlin"
+    user: sogo
+    command: /task-sogo-cron.sh
+    depends_on:
+      - sogo
+    restart: unless-stopped
+
+  sogo-autoreply:
+    image: rns/sogo:4.0.7
+    container_name: sogo-autoreply
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "2m"
+        max-file: "10"
+    volumes:
+      - sogoconf:/etc/sogo:ro
+      - ./scripts/task-sogo-updatealarm.sh:/task-sogo-updatealarm.sh:ro
+    networks:
+      - sogo_default
+    environment:
+      - "TZ=Europe/Berlin"
+    user: sogo
+    command: /task-sogo-updatealarm.sh
+    depends_on:
+      - sogo
+    restart: unless-stopped
+
+volumes:
+  sogoconf:
+  backups:
+  tmp_vol:
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
+
+networks:
+  sogo_default:
+    driver: bridge
+    driver_opts:
+      com.docker.network.bridge.name: sogo0
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.16.238.0/24
+
+# vim: ts=2 sw=2 expandtab
