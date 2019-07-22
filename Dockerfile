@@ -4,7 +4,7 @@ ENV DEBIAN_FRONTEND noninteractive
 
 MAINTAINER Christian Roessner <christian@roessner.email>
 
-ARG version=4.0.7
+ARG version=4.0.8
 
 WORKDIR /tmp/build
 
