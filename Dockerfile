@@ -49,7 +49,7 @@ RUN set -ex; \
   echo "/usr/local/lib/sogo" > /etc/ld.so.conf.d/sogo.conf; \
   ldconfig; \
   echo "Create user sogo"; \
-  groupadd --system sogo && useradd --system --gid sogo sogo; \
+  groupadd --system --gid 999 sogo && useradd --system --uid 999 --gid sogo sogo; \
   echo "Create directories and enforce permissions"; \
   install -o sogo -g sogo -m 755 -d /run/sogo; \
   install -o sogo -g sogo -m 750 -d /var/spool/sogo; \
