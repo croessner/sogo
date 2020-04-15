@@ -1,10 +1,11 @@
-FROM ubuntu:18.04
+FROM debian:10
 
 ENV DEBIAN_FRONTEND noninteractive
 
 MAINTAINER Christian Roessner <christian@roessner.email>
 
-ARG version=4.1.0
+ARG version=4.3.0
+ARG wbxml_version=0.11.6
 
 WORKDIR /tmp/build
 
@@ -14,11 +15,16 @@ ADD https://github.com/inverse-inc/sope/archive/SOPE-${version}.tar.gz /tmp/src/
 # Download SOGo sources
 ADD https://github.com/inverse-inc/sogo/archive/SOGo-${version}.tar.gz /tmp/src/SOGo/SOGo.tar.gz
 
+# For ActiveSync - libwbxml
+ADD https://github.com/libwbxml/libwbxml/archive/libwbxml-${wbxml_version}.tar.gz /tmp/src/wbxml2.tar.gz
+
 RUN set -ex; \
   echo "Untar SOPE sources"; \
   tar -xf /tmp/src/SOPE/SOPE.tar.gz && mkdir /tmp/SOPE && mv sope-SOPE-${version}/* /tmp/SOPE/.; \
   echo "Untar SOGO sources"; \
   tar -xf /tmp/src/SOGo/SOGo.tar.gz && mkdir /tmp/SOGo && mv sogo-SOGo-${version}/* /tmp/SOGo/.; \
+  echo "Untar wbxml sources"; \
+  tar -xf /tmp/src/wbxml2.tar.gz && mkdir /tmp/wbxml2 && mv libwbxml-libwbxml-${wbxml_version}/* /tmp/wbxml2/.; \
   echo "Install required packages"; \
   apt-get update; \
   apt-get install -qy --no-install-recommends \
@@ -26,11 +32,14 @@ RUN set -ex; \
       gnustep-base-common \
       libgnustep-base-dev \
       make \
+      cmake \
       gobjc \
       libxml2-dev \
+      libexpat1-dev \
       libssl-dev \
       libldap2-dev \
-      postgresql-server-dev-10 \
+      zlib1g-dev \
+      postgresql-server-dev-11 \
       libmemcached-dev \
       libcurl4-openssl-dev \
       supervisor \
@@ -43,6 +52,19 @@ RUN set -ex; \
   make install; \
   cd /tmp/SOGo; \
   ./configure --enable-debug --disable-strip; \
+  make; \
+  make install; \
+  echo "Building wbxml"; \
+  cd /tmp/wbxml2; \
+  cmake . -B/tmp/build/libwbxml; \
+  cd /tmp/build/libwbxml; \
+  make; \
+  make install; \
+  echo "/usr/local/lib" > /etc/ld.so.conf.d/local.conf; \
+  ldconfig; \
+  ln -s /usr/local/include/libwbxml-1.0/wbxml /usr/include; \
+  echo "Building ActiveSync"; \
+  cd /tmp/SOGo/ActiveSync; \
   make; \
   make install; \
   echo "Register SOGo library"; \
@@ -59,13 +81,14 @@ RUN set -ex; \
       libcurl4 \
       libgcc1 \
       libglib2.0-0 \
-      libgnustep-base1.25 \
+      libgnustep-base1.26 \
       libldap-2.4-2 \
       libmemcached11 \
       libobjc4 \
       libpq5 \
       libssl1.1 \
       libxml2 \
+      zlib1g \
       postgresql-client-common \
       postgresql-common > /dev/null; \
   apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
@@ -76,10 +99,13 @@ RUN set -ex; \
       libmemcached-dev \
       libssl-dev \
       libxml2-dev \
+      libexpat1-dev \
+      zlib1g-dev \
       make \
-      postgresql-server-dev-10; \
+      cmake \
+      postgresql-server-dev-11; \
   rm -rf /var/lib/apt/lists/*; \
-  rm -rf /tmp/build /tmp/SOPE /tmp/SOGo /tmp/src
+  rm -rf /tmp/build /tmp/SOPE /tmp/SOGo /tmp/wbxml2 /tmp/src
 
 COPY ./supervisor/supervisord-docker.conf /etc/supervisor/supervisord-docker.conf
 COPY ./supervisor/sogod.conf /etc/supervisor/conf.d/sogod.conf
