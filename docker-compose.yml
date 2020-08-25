@@ -2,7 +2,7 @@ version: '3.3'
 
 services:
   sogo:
-    image: chrroessner/sogo:4.3.1
+    image: chrroessner/sogo:5.0.0
     read_only: true
     container_name: sogo
     logging:
@@ -29,7 +29,7 @@ services:
     restart: always
 
   sogo-backup:
-    image: chrroessner/sogo:4.3.1
+    image: chrroessner/sogo:5.0.0
     container_name: sogo-backup
     logging:
       driver: "json-file"
@@ -51,7 +51,7 @@ services:
     restart: unless-stopped
       
   sogo-cron:
-    image: chrroessner/sogo:4.3.1
+    image: chrroessner/sogo:5.0.0
     container_name: sogo-cron
     logging:
       driver: "json-file"
@@ -72,7 +72,7 @@ services:
     restart: unless-stopped
 
   sogo-autoreply:
-    image: chrroessner/sogo:4.3.1
+    image: chrroessner/sogo:5.0.0
     container_name: sogo-autoreply
     logging:
       driver: "json-file"

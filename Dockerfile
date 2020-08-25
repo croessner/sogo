@@ -4,7 +4,7 @@ ENV DEBIAN_FRONTEND noninteractive
 
 MAINTAINER Christian Roessner <christian@roessner.email>
 
-ARG version=4.3.1
+ARG version=5.0.0
 ARG wbxml_version=0.11.6
 
 WORKDIR /tmp/build
@@ -41,6 +41,8 @@ RUN set -ex; \
       zlib1g-dev \
       postgresql-server-dev-11 \
       libmemcached-dev \
+      libsodium-dev \
+      libzip-dev \
       libcurl4-openssl-dev \
       supervisor \
       nginx \
@@ -84,6 +86,8 @@ RUN set -ex; \
       libgnustep-base1.26 \
       libldap-2.4-2 \
       libmemcached11 \
+      libsodium23 \
+      libzip4 \
       libobjc4 \
       libpq5 \
       libssl1.1 \
