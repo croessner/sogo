@@ -2,7 +2,7 @@ version: '3.3'
 
 services:
   sogo:
-    image: chrroessner/sogo:5.0.0
+    image: chrroessner/sogo:5.1.0
     read_only: true
     container_name: sogo
     logging:
@@ -13,6 +13,7 @@ services:
     volumes:
       - tmp_vol:/tmp
       - sogoconf:/etc/sogo:ro
+      - msmtpconf:/etc/msmtprc:ro
     tmpfs:
       - /run
       - /var/lib/nginx
@@ -29,7 +30,7 @@ services:
     restart: always
 
   sogo-backup:
-    image: chrroessner/sogo:5.0.0
+    image: chrroessner/sogo:5.1.0
     container_name: sogo-backup
     logging:
       driver: "json-file"
@@ -51,7 +52,7 @@ services:
     restart: unless-stopped
       
   sogo-cron:
-    image: chrroessner/sogo:5.0.0
+    image: chrroessner/sogo:5.1.0
     container_name: sogo-cron
     logging:
       driver: "json-file"
@@ -72,7 +73,7 @@ services:
     restart: unless-stopped
 
   sogo-autoreply:
-    image: chrroessner/sogo:5.0.0
+    image: chrroessner/sogo:5.1.0
     container_name: sogo-autoreply
     logging:
       driver: "json-file"
@@ -94,6 +95,7 @@ services:
 
 volumes:
   sogoconf:
+  msmtpconf:
   backups:
   tmp_vol:
     driver_opts:
