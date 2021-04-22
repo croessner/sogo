@@ -43,6 +43,7 @@ RUN set -ex; \
       libmemcached-dev \
       libsodium-dev \
       libzip-dev \
+      liboath-dev \
       libcurl4-openssl-dev \
       supervisor \
       nginx \
@@ -54,7 +55,7 @@ RUN set -ex; \
   make; \
   make install; \
   cd /tmp/SOGo; \
-  ./configure --enable-debug --disable-strip; \
+  ./configure --enable-debug --enable-mfa --disable-strip; \
   make; \
   make install; \
   echo "Building wbxml"; \
@@ -89,6 +90,7 @@ RUN set -ex; \
       libmemcached11 \
       libsodium23 \
       libzip4 \
+      liboath0 \
       libobjc4 \
       libpq5 \
       libssl1.1 \
