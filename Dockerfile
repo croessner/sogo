@@ -4,7 +4,7 @@ ENV DEBIAN_FRONTEND noninteractive
 
 MAINTAINER Christian Roessner <christian@roessner.email>
 
-ARG version=5.0.0
+ARG version=5.1.0
 ARG wbxml_version=0.11.6
 
 WORKDIR /tmp/build
@@ -46,7 +46,8 @@ RUN set -ex; \
       libcurl4-openssl-dev \
       supervisor \
       nginx \
-      tzdata; \
+      tzdata \
+      msmtp; \
   echo "Compiling SOPE and SOGo"; \
   cd /tmp/SOPE;  \
   ./configure --with-gnustep --enable-debug --disable-strip; \
