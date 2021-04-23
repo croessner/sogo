@@ -122,6 +122,8 @@ COPY ./supervisor/sogod.conf /etc/supervisor/conf.d/sogod.conf
 COPY ./nginx/nginx-docker.conf /etc/nginx/nginx-docker.conf
 COPY ./supervisor/nginx.conf /etc/supervisor/conf.d/nginx.conf
 
+COPY ./run.sh /
+
 VOLUME [ "/usr/local/lib/GNUstep/SOGo/WebServerResources", "/var/spool/postfix", "/etc/postfix" ]
 
 EXPOSE 80 20000
