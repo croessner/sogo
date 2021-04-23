@@ -1,5 +1,6 @@
 compatibility_level = 2
 smtpd_banner = $myhostname ESMTP
 smtp_tls_session_cache_database = btree:${data_directory}/smtp_scache
+inet_protocols = ipv4
 inet_interfaces = loopback-only
 syslog_name=postfix/sogo
