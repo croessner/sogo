@@ -14,7 +14,7 @@ services:
       - tmp_vol:/tmp
       - sogoconf:/etc/sogo:ro
       - postfix_spool:/var/spool/postfix
-      - ./postfix/main.cf:/etc/postfix/main.cf:ro
+      - ./postfix/main.cf:/etc/postfix/main.cf
     tmpfs:
       - /run
       - /var/lib/nginx
