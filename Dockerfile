@@ -121,6 +121,7 @@ COPY ./supervisor/sogod.conf /etc/supervisor/conf.d/sogod.conf
 
 COPY ./nginx/nginx-docker.conf /etc/nginx/nginx-docker.conf
 COPY ./postfix/main.cf /etc/postfix/main.cf
+COPY ./postfix/master.cf /etc/postfix/master.cf
 COPY ./supervisor/nginx.conf /etc/supervisor/conf.d/nginx.conf
 COPY ./supervisor/postfix.conf /etc/supervisor/conf.d/postfix.conf
 
