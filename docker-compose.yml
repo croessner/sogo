@@ -3,7 +3,6 @@ version: '3.3'
 services:
   sogo:
     image: chrroessner/sogo:5.1.0
-    read_only: true
     container_name: sogo
     logging:
       driver: "json-file"
