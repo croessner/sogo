@@ -125,5 +125,3 @@ mailman   unix  -       n       n       -       -       pipe
   flags=FR user=list argv=/usr/lib/mailman/bin/postfix-to-mailman.py
   ${nexthop} ${user}
 
-postlog   unix-dgram n  -       n       -       1       postlogd
-
