@@ -7,15 +7,15 @@ SUPERVISORD="/usr/bin/supervisord"
 [[ -x $SUPERVISORD ]] || exit 1
 
 if [[ -n "$POSTFIX_MYHOSTNAME" ]]; then
-	$POSTCONF myhostname=$POSTFIX_MYHOSTNAME
+	$POSTCONF -e myhostname=$POSTFIX_MYHOSTNAME
 else
-	$POSTCONF myhostname=localhost
+	$POSTCONF -e myhostname=localhost
 fi
 
 if [[ -n "$POSTFIX_RELAYHOST" ]]; then
-	$POSTCONF relayhost=$POSTFIX_RELAYHOST
+	$POSTCONF -e relayhost=$POSTFIX_RELAYHOST
 else
-	$POSTCONF relayhost=
+	$POSTCONF -e relayhost=
 fi
 
 exec $SUPERVISORD --configuration /etc/supervisor/supervisord-docker.conf
