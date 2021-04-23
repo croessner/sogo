@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
 POSTCONF="/usr/sbin/postconf"
-test [[ -x $POSTCONF ]] || exit 1
+[[ -x $POSTCONF ]] || exit 1
 
 SUPERVISORD="/usr/bin/supervisord"
-test [[ -x $SUPERVISORD ]] || exit 1
+[[ -x $SUPERVISORD ]] || exit 1
 
 if [[ -n "$POSTFIX_MYHOSTNAME" ]]; then
 	$POSTCONF myhostname=$POSTFIX_MYHOSTNAME
