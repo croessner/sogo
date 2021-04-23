@@ -1,6 +1,20 @@
 compatibility_level = 2
+
+myhostname = localhost
+relayhost =
+
 smtpd_banner = $myhostname ESMTP
-smtp_tls_session_cache_database = btree:${data_directory}/smtp_scache
+
 inet_protocols = ipv4
 inet_interfaces = loopback-only
+
+maillog_file = /dev/stdout
 syslog_name=postfix/sogo
+
+smtp_tls_session_cache_database = btree:${data_directory}/smtp_scache
+smtp_tls_security_level = dane
+smtp_tls_loglevel = 1
+smtp_tls_note_starttls_offer = yes
+smtp_tls_CApath = /etc/ssl/certs
+smtp_tls_mandatory_ciphers = high
+smtp_tls_ciphers = high
