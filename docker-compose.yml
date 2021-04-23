@@ -13,7 +13,7 @@ services:
     volumes:
       - tmp_vol:/tmp
       - sogoconf:/etc/sogo:ro
-      - msmtpconf:/etc/msmtprc:ro
+      - ./postfix/main.cf:/var/spool/postfix/main.cf:ro
     tmpfs:
       - /run
       - /var/lib/nginx
@@ -95,7 +95,7 @@ services:
 
 volumes:
   sogoconf:
-  msmtpconf:
+  postfix_spool:
   backups:
   tmp_vol:
     driver_opts:

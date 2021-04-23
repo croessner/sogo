@@ -48,7 +48,9 @@ RUN set -ex; \
       supervisor \
       nginx \
       tzdata \
-      msmtp; \
+      ca-certificates \
+      netcat-traditional \
+      postfix; \
   echo "Compiling SOPE and SOGo"; \
   cd /tmp/SOPE;  \
   ./configure --with-gnustep --enable-debug --disable-strip; \
@@ -120,12 +122,14 @@ COPY ./supervisor/sogod.conf /etc/supervisor/conf.d/sogod.conf
 COPY ./nginx/nginx-docker.conf /etc/nginx/nginx-docker.conf
 COPY ./supervisor/nginx.conf /etc/supervisor/conf.d/nginx.conf
 
-VOLUME /usr/local/lib/GNUstep/SOGo/WebServerResources
+VOLUME [ "/usr/local/lib/GNUstep/SOGo/WebServerResources", "/var/spool/postfix", "/etc/postfix" ]
 
 EXPOSE 80 20000
 
 # load env
 RUN . /usr/share/GNUstep/Makefiles/GNUstep.sh
 
-CMD [ "/usr/bin/supervisord", "--configuration", "/etc/supervisor/supervisord-docker.conf" ]
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 CMD printf "EHLO healthcheck\n" | nc 127.0.0.1 587 | grep -qE "^220.*ESMTP"
+
+CMD [ "/bin/sh", "-c", "/run.sh" ]
 
