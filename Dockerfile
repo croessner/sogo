@@ -4,7 +4,7 @@ ENV DEBIAN_FRONTEND noninteractive
 
 MAINTAINER Christian Roessner <christian@roessner.email>
 
-ARG version=5.1.0
+ARG version=5.1.1
 ARG wbxml_version=0.11.6
 
 WORKDIR /tmp/build
